@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block title %}
+    ამინდის პროგნოზი
+{% endblock %}
+
+{% block content %}
+{% if not user.is_authenticated %}
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-6">
+                <form method="post" action="{% url 'login' %}">
+                    {% csrf_token %}
+                    {{ login_form.as_p }}
+                    <button type="submit" class="btn btn-primary">ავტორიზაცია</button>
+                </form>
+            </div>
+            <div class="col-md-6">
+                <form method="post" action="{% url 'signup' %}">
+                    {% csrf_token %}
+                    {{ signup_form.as_p }}
+                    <button type="submit" class="btn btn-primary">რეგისტრაცია</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-6 offset-1">
+            {% if user.is_authenticated %}
+            <form id="cityForm" action="" method="post">
+                {% csrf_token %}
+                <label for="city">City</label>
+                {{ form.name }}
+                <input type="submit" name="send" value="ძებნა" class="mt-2 btn btn-danger">
+            </form>
+                {% if error_message %}
+                    <div class="alert alert-warning mt-3">
+                        {{ error_message }}
+                    </div>
+                {% endif %}
+            {% else %}
+                <h3>ქალაქის დასამატებლად საჭიროა გაიაროთ ავტორიზაცია/რეგისტრაცია </h3>
+            {% endif %}
+        </div>
+        <div class="col-4 offset-1">
+            <h2>ინფორმაცია</h2>
+            {% for info in all_info %}
+                <div class="alert alert-info animate__animated animate__fadeIn">
+                    <div class="row">
+                        <div class="col-9">
+                            <b> ქალაქი: </b> <a>{{ info.city }}</a><br>
+                            <b> ტემპერატურა: </b> {{ info.temp }} <sup>o</sup>C <br>
+                            <b> ქვეყანა: </b> {{ info.country }} <br>
+                            <b> მომხმარებელი: </b> {{ info.user.username }} <br>
+                            {% if user.is_authenticated and user == info.user %}
+                                <form action="{% url 'delete_city' info.city %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger mt-2">წაშლა</button>
+                                </form>
+                            {% endif %}
+                        </div>
+                        <div class="col-2 offset-1">
+                            <img src="http://openweathermap.org//img/w/{{ info.icon }}.png" alt="Icon:" class="img-thumbnail">
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            <a href="{% url 'all_cities' %}" class="btn btn-primary mt-3 animate__animated animate__fadeInUp">მაჩვენე ყველა!</a>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('id_name').value = '';
+    });
+</script>
+{% endblock %}

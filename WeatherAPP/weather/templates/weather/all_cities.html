@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% block title %}
+    ამინდის პროგნოზი
+{% endblock %}
+       
+{% block content %}
+
+    </div>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+
+        .city-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .city-item {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px;
+            flex: 0 1 calc(25% - 20px);
+            /* Adjust the width to show 4 items per row */
+            box-sizing: border-box;
+        }
+
+        .city-item img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        @media screen and (max-width: 768px) {
+            .city-item {
+                flex-basis: calc(50% - 20px);
+                /* Adjust the width to show 2 items per row on smaller screens */
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .city-item {
+                flex-basis: calc(100% - 20px);
+                /* Show 1 item per row on smaller screens */
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>ყველა ქალაქი!</h1>
+    <ul class="city-list">
+        {% for city in cities %}
+            <li class="city-item">
+                <h2>{{ city.name }}</h2>
+                <p>ტემპერატურა: {{ city.temperature }}°C</p>
+                <p>Country: {{ city.country }}</p>
+                <p> მომხმარებელი:  {{ city.user.username }} </p>
+                <img src="http://openweathermap.org/img/w/{{ city.weather_icon }}.png" alt="Weather Icon">
+                {% if user.is_authenticated and user == city.user %}
+                    <form action="{% url 'delete_city' city.name %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger mt-2">წაშლა</button>
+                    </form>
+                {% endif %}
+            </li>
+            
+        {% endfor %}
+    </ul>
+</body>
+{% endblock %}
