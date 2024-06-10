@@ -31,7 +31,7 @@
             {% if user.is_authenticated %}
             <form id="cityForm" action="" method="post">
                 {% csrf_token %}
-                <label for="city">City</label>
+                <label for="city">ქალაქი</label>
                 {{ form.name }}
                 <input type="submit" name="send" value="ძებნა" class="mt-2 btn btn-danger">
             </form>

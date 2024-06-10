@@ -31,9 +31,9 @@ def index(request):
                     City.objects.create(name=new_city, temperature=temperature, country=country, weather_icon=weather_icon, user=user)
                     added_successfully = True
                 except KeyError:
-                    error_message = f"Data for {new_city} is incomplete or missing."
+                    error_message = f"ქალაქის სახელი '{new_city}' არასწორია."
             else:
-                error_message = 'City is already in the database!'
+                error_message = 'ქალაქი უკვე დამატებულია მონაცემთა ბაზაში!'
         else:
             error_message = 'Invalid form data!'
             form = CityForm()
@@ -52,7 +52,7 @@ def index(request):
             city.weather_icon = weather_icon
             city.save()
         except KeyError:
-            error_message = f"Data for {city.name} is incomplete or missing."
+            error_message = f"ქალაქის სახელი '{city.name}' არასწორია."
 
     all_cities = []
     for city in cities:
